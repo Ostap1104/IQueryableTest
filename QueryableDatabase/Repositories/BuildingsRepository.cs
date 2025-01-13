@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using QueryableCore.DTOs;
 using QueryableCore.RepositoriesInterfaces;
 using QueryableDatabase.Migrations;
@@ -32,7 +33,41 @@ namespace QueryableDatabase.Repositories
             return changesCount > 0 ? building.Id : null;
         }
 
-       
+        public async Task<bool> DeleteAsync(int id)
+        {
+            Building? building = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (building == null)
+            {
+                return false;
+            }
+
+            _dbContext.Buildings.Remove(building);
+            int countDeleted = await _dbContext.SaveChangesAsync();
+            return countDeleted > 0;
+        }
+
+        public BuildingDto? Get(int id)
+        {
+            Building? building = _dbContext.Buildings.FirstOrDefault(b => b.Id == id);
+            return building == null ? null : _mapper.Map<BuildingDto>(building);
+        }
+
+        public async Task<bool> UpdateBuildingAsync(BuildingDto buildingDto)
+        {
+            Building? existingBuilding = await _dbContext.Buildings.FirstOrDefaultAsync(b=> b.Id == buildingDto.Id);
+
+            if(existingBuilding == null)
+            {
+                return false;
+            }
+            existingBuilding.Name = buildingDto.Name;
+            existingBuilding.Floors = buildingDto.Floors;
+            existingBuilding.YearBuilt = buildingDto.YearBuilt;
+           _dbContext.Buildings.Update(existingBuilding);
+            int countUpdated =  await _dbContext.SaveChangesAsync();
+            return countUpdated>0;
+        }
 
         List<BuildingDto> IBuildingsRepository.GetFilteredAndSortedBuildings(BuildingsRequestData requestData)
         {

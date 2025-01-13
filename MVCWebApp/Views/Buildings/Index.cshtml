@@ -1,0 +1,48 @@
+﻿@model IEnumerable<MVCWebApp.Models.BuildingModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var building in Model) {
+        <tr>
+            <td>@building.Id</td>
+            <td>@building.Name</td>
+            <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = building.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = building.Id}) |
+                    <a href="#" onclick="event.preventDefault(); deleteBuilding(@building.Id)">Delete</a>
+                    @* @Html.ActionLink("Delete", "Delete", new { id = building.Id }) *@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script>
+    function deleteBuilding(id) {
+        const url = `/buildings/delete?id=${id}`;
+
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            success: function (msg) {
+                location.reload();
+            },
+            error: function (msg) {
+                alert('Error');
+            }
+        });
+    }
+</script>

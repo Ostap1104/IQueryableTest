@@ -20,6 +20,11 @@ namespace QueryableCore.Services
         {
             _buildingsRepository = buildingsRepository;
         }
+
+        public BuildingDto? Get(int id)
+        {
+            return _buildingsRepository.Get(id);
+        }
         public List<BuildingDto> GetBuildings(BuildingsRequestData requestData)
         {
             return _buildingsRepository.GetFilteredAndSortedBuildings(requestData);
@@ -178,6 +183,16 @@ namespace QueryableCore.Services
             }
 
             return modifiers;
+        }
+
+        public async Task<bool> UpdateBuildingAsync(BuildingDto buildingDto)
+        {
+            return await _buildingsRepository.UpdateBuildingAsync(buildingDto);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _buildingsRepository.DeleteAsync(id);
         }
     }
 

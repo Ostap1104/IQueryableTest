@@ -9,5 +9,8 @@ namespace QueryableCore.Services.Interfaces
         List<BuildingDto> GetBuildings(BuildingsRequestData requestData);
         List<string> GetRequiredFields(Type modelType);
         List<string> GetClassMembers(string modelName, bool? isRequired, AccessModifier[] accessModifiers, MemberType[] memberTypes, bool? isStatic);
+        public BuildingDto? Get(int id);
+        Task<bool> UpdateBuildingAsync(BuildingDto buildingDto);
+        Task<bool> DeleteAsync(int id);
     }
 }
